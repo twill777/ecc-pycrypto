@@ -12,7 +12,6 @@ class ElGamal:
 
     def encrypt(self, plaintext: bytes, public_key: Point,
                 randfunc: Callable = None) -> Tuple[Point, Point, int]:
-        print("hey")
         return self.encrypt_bytes(plaintext, public_key, randfunc)
 
     def decrypt(self, private_key: int, C1: Point, C2: Point) -> bytes:
