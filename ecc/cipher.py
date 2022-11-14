@@ -11,14 +11,15 @@ class ElGamal:
     curve: Curve
 
     def encrypt(self, plaintext: bytes, public_key: Point,
-                randfunc: Callable = None) -> Tuple[Point, Point]:
+                randfunc: Callable = None) -> Tuple[Point, Point, int]:
+        print("hey")
         return self.encrypt_bytes(plaintext, public_key, randfunc)
 
     def decrypt(self, private_key: int, C1: Point, C2: Point) -> bytes:
         return self.decrypt_bytes(private_key, C1, C2)
 
     def encrypt_bytes(self, plaintext: bytes, public_key: Point,
-                      randfunc: Callable = None) -> Tuple[Point, Point]:
+                      randfunc: Callable = None) -> Tuple[Point, Point, int]:
         # Encode plaintext into a curve point
         M = self.curve.encode_point(plaintext)
         return self.encrypt_point(M, public_key, randfunc)
@@ -28,7 +29,7 @@ class ElGamal:
         return self.curve.decode_point(M)
 
     def encrypt_point(self, plaintext: Point, public_key: Point,
-                      randfunc: Callable = None) -> Tuple[Point, Point]:
+                      randfunc: Callable = None) -> Tuple[Point, Point, int]:
         randfunc = randfunc or urandom
         # Base point G
         G = self.curve.G
@@ -39,7 +40,7 @@ class ElGamal:
 
         C1 = k * G
         C2 = M + k * public_key
-        return C1, C2
+        return C1, C2, k
 
     def decrypt_point(self, private_key: int, C1: Point, C2: Point) -> Point:
         M = C2 + (self.curve.n - private_key) * C1
